@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- hr.employee inherit form view -->
+    <record id="flota_view_employee_form" model="ir.ui.view">
+        <field name="name">hr.employee.inherit.view.form</field>
+        <field name="model">hr.employee</field>
+        <field name="inherit_id" ref="hr.view_employee_form" />
+        <field name="arch" type="xml">
+            <field name="work_phone" position="after"> 
+                <field name="drivers_license"/>
+                <field name="driver_status" attrs="{'invisible': [('is_driver', '=', False)]}"/>
+                <field name="trips_count" attrs="{'invisible': [('is_driver', '=', False)]}"/>
+                <field name="is_driver"/>
+            </field>
+
+            <notebook>
+                <page string="Imagenes">
+                    <group colspan="6" name="main" string="Imagenes de conductor">
+                        <group name="main_left">
+                            <!-- <field name="imagen_licencia" widget='image' class="oe_avatar"/> -->
+                            <field name="imagen_licencia" widget='image' class="img img-responsive" width="100" height="100"/>
+                        </group>
+                        <group name="main_right">
+                            <!-- <field name="licencia_image_url"/> -->
+                        </group> 
+                    </group>
+                </page>                    
+            </notebook>
+        </field>
+    </record>
+
+</odoo>

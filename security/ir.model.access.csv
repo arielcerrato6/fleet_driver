@@ -1,0 +1,7 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_ficha_conductor,access.ficha_conductor,model_ficha_conductor,fleet.fleet_group_manager,1,1,1,1
+access_ficha_conductor2,fleet_driver.ficha_conductor2,model_ficha_conductor,fleet.fleet_group_user,1,1,1,0
+access_etapas_fleet_vehicle,fleet_driver.etapas_fleet_vehicle,model_etapas_fleet_vehicle,fleet.fleet_group_user,1,1,1,0
+access_etapas_fleet_vehicle2,fleet_driver.etapas_fleet_vehicle2,model_etapas_fleet_vehicle,fleet.fleet_group_manager,1,1,1,1
+access_fleet_driver_state2,fleet_driver_fleet_driver_state2,model_fleet_driver_state,fleet.fleet_group_manager,1,1,1,1
+access_fleet_driver_state,fleet_driver_fleet_driver_state,model_fleet_driver_state,fleet.fleet_group_user,1,1,1,0

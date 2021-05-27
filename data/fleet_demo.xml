@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+      <!--Estados-->
+      <record id="fleet_status_state_free" model="fleet.driver.state">
+          <field name="name">Libre</field>
+          <field name="sequence">0</field>
+      </record>
+</odoo>

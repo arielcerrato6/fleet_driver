@@ -1,0 +1,163 @@
+<?xml version='1.0' encoding='utf-8'?>
+<odoo>
+    <data>
+        <!--Tree view-->
+        <record id="ficha_conductor_tree" model="ir.ui.view">
+            <field name="name">name_ficha_conductor_tree</field>
+            <field name="model">ficha_conductor</field>
+            <field name="arch" type="xml">
+                <tree string="Ficha">
+                        <field name="id"/>
+                        <field name="conductor" />
+                        <!-- <field name="estatus_motorista"/> -->
+                        <field name="estatus_carre"/>
+                </tree>
+            </field>
+        </record>
+
+        <!--Form view-->
+        <record id="ficha_conductor_form_1" model="ir.ui.view">
+            <field name="name">ficha_conductor_form_1.form</field>
+            <field name="model">ficha_conductor</field>
+            <field name="arch" type="xml">     
+                <form string="Datos de Conductor" class="o_opportunity_form">
+                    <header>
+                        <field name="state_id"  widget="statusbar" options="{'clickable': '1'}"/>
+                    </header>
+                    <sheet>
+                        <group name="main">
+                            <group name="main_left">
+                                <field name="conductor" domain="[('is_driver', '=', True)]" attrs="{'readonly': [('order_id', '!=', False)]}"/>
+                                <field name="estatus_carre"/>
+                                <field name="drivers_license"/>
+                                <!-- <field name="etapa"/> -->
+                                <!-- <field name="telefono"/> -->
+                            </group>
+                            <group name="main_right">
+                                <field name="vehicle" domain="[('driver.id', '=', conductor)]"/>
+                                <!-- <field name="etapa" options="{'no_create': True}" readonly="1" invisible="1"/> -->
+                                <field name="order_id"/>
+                            </group>
+                        </group>
+                        <notebook colspan="4">
+                            <page string="Notas Internas">
+                                <field name="description"/>
+                            </page> 
+                            <!-- <page string="Informacion extra">
+                                <group>
+                                    <group string="Información Inicial de Contacto">
+                                         
+                                    </group>
+                                    <group string="Misc" >
+                                        <field name="day_open" groups="base.group_no_one"/>
+                                        <field name="day_close" groups="base.group_no_one"/>
+                                    </group>
+                                </group>
+                                    
+                            </page>   -->
+                        </notebook>
+                    </sheet>
+
+                    <div class="oe_chatter">
+                        <field name="message_follower_ids" widget="mail_followers"/>
+                        <field name="activity_ids" widget="mail_activity"/>
+                        <field name="message_ids" widget="mail_thread" options="{'post_refresh': 'recipients'}"/>
+                    </div>
+
+                </form>
+            </field>
+        </record>
+
+         <!--Vista Kanban-->
+        <record id="ficha_conductor_kanban_view" model="ir.ui.view">
+            <field name="name">ficha_conductor.kanban</field>
+            <field name="model">ficha_conductor</field>
+            <field name="priority" eval="1"/>
+            <field name="arch" type="xml">
+                <!-- <kanban class="o_kanban_mobile" archivable="false"  default_group_by="etapa"> -->
+                <kanban default_group_by="state_id" on_create="quick_create">
+                    <progressbar field="activity_state" colors='{"planned": "success", "today": "warning", "overdue": "danger"}' sum="conductor" help="This bar allows to filter the opportunities based on scheduled activities."/>
+                    <templates>
+                        <t t-name="kanban-box">
+                            <div t-attf-class="oe_kanban_global_click">
+                                <div class="o_dropdown_kanban dropdown">
+                                    <a class="dropdown-toggle o-no-caret btn" role="button" data-toggle="dropdown" data-display="static" href="#" aria-label="Dropdown menu" title="Dropdown menu">
+                                        <span class="fa fa-ellipsis-v"/>
+                                    </a>
+                                    <div class="dropdown-menu" role="menu">
+                                        <t t-if="widget.editable"><a role="menuitem" type="edit" class="dropdown-item">Edit</a></t>
+                                        <t t-if="widget.deletable"><a role="menuitem" type="delete" class="dropdown-item">Delete</a></t>
+                                        <ul class="oe_kanban_colorpicker" data-field="color"/>
+                                    </div>
+                                </div>
+
+                                <div class="oe_kanban_content">
+                                    <div>
+                                        Numero de Pedido: <strong><field name="order_id"/></strong>
+                                    </div>
+                                    <div>
+                                        Conductor: <strong><field name="conductor"/></strong>
+                                    </div>
+                                    <div>
+                                        Estatus carretera: <field name="estatus_carre"/>
+                                    </div>
+                                    <div>
+                                        Estapa: <field name="state_id"/>
+                                    </div>
+
+                                    <!--Icono que muestra las actividades -->
+                                    <div class="o_kanban_record_bottom">
+                                        <div class="oe_kanban_bottom_left">
+                                            <field name="priority" widget="priority"/>       
+                                            <field name="activity_ids" widget="kanban_activity"/>
+                                        </div>
+                                    </div>
+                                        
+                                    <div class="oe_clear"/>
+                                </div>    
+                            </div>
+                        </t>
+                    </templates>
+                </kanban>
+            </field>
+        </record>
+
+        <!--Vista Search-->
+        <record id="ficha_conductor_filter_view" model="ir.ui.view">
+            <field name="name">ficha_conductor_filter_view.filter</field>
+            <field name="model">ficha_conductor</field>
+            <field name="arch" type="xml">
+                <search string="Busqueda Conductores">  
+                    <field name="conductor"/>
+                    <!-- <field name="etapa"/> -->
+                    <separator/>
+                    <!-- <filter string="Actividades a realizar" name="activities_my"
+                            domain="[('activity_ids.user_id', '=', uid)]"/>
+                    <separator/>
+                    <filter string="Actividades tardias" name="activities_overdue"
+                            domain="[('activity_ids.date_deadline', '&lt;', context_today().strftime('%Y-%m-%d'))]"
+                            help="Show all opportunities for which the next action date is before today"/>
+                    <filter string="Actividades de Hoy" name="activities_today"
+                            domain="[('activity_ids.date_deadline', '=', context_today().strftime('%Y-%m-%d'))]"/>
+                    <filter string="Actividades Futuras" name="activities_upcoming_all"
+                            domain="[('activity_ids.date_deadline', '&gt;', context_today().strftime('%Y-%m-%d'))]"/>
+                    <group expand="0" string="Agrupor por">
+                        <filter string="Conductor" name="conductor" context="{'group_by':'conductor.id'}"/>
+                        <filter name="stage" string="Etapas" />
+                    </group> -->
+                </search>
+            </field>
+        </record>
+
+        <!-- actions opening views on models -->
+        <record model="ir.actions.act_window" id="ficha_conductor_action">
+            <field name="name">Ficha del conductor</field>
+            <field name="res_model">ficha_conductor</field>
+            <field name="view_mode">kanban,tree,form</field>
+        </record>
+
+        <!-- root menu -->
+        <menuitem name="Conductor" parent="fleet.menu_root" id="driver_menu" sequence="4" />
+            <menuitem name="Ficha" sequence="1" action="ficha_conductor_action" id="ficha_condutor_1" parent="driver_menu"/>
+    </data>
+</odoo>
